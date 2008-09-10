@@ -21,6 +21,9 @@ module Capistrano
       # variable will take precedence over other options. If both HOSTS and
       # ROLES are given, HOSTS wins.
       #
+      # Yet additionally, if the ONLYHOSTS environment variable is set, it
+      # will limit the result to hosts found in that (comma-separated) list.
+      #
       # Usage:
       #
       #   # return all known servers
@@ -37,7 +40,7 @@ module Capistrano
         hosts  = server_list_from(ENV['HOSTS'] || options[:hosts])
         
         if hosts.any?
-          hosts.uniq
+          servers = hosts.uniq
         else
           roles  = role_list_from(ENV['ROLES'] || options[:roles] || self.roles.keys)
           only   = options[:only] || {}
@@ -46,8 +49,12 @@ module Capistrano
           servers = roles.inject([]) { |list, role| list.concat(self.roles[role]) }
           servers = servers.select { |server| only.all? { |key,value| server.options[key] == value } }
           servers = servers.reject { |server| except.any? { |key,value| server.options[key] == value } }
-          servers.uniq
+          servers = servers.uniq
         end
+        
+        only_hosts = ENV['ONLYHOSTS'].split(/,/) if ENV['ONLYHOSTS']
+        servers = servers.select { |server| only_hosts.include?(server.host) } if only_hosts
+        servers
       end
 
     protected
