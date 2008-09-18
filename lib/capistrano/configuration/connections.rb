@@ -131,7 +131,7 @@ module Capistrano
           servers = find_servers_for_task(task, options)
 
           if servers.empty?
-            if ENV['ONLYHOSTS']
+            if ENV['HOSTFILTER']
               logger.info "skipping `#{task.fully_qualified_name}' because no servers matched"
               return
             else
