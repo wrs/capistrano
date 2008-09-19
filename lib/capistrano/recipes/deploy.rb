@@ -49,7 +49,7 @@ _cset(:releases_path)     { File.join(deploy_to, version_dir) }
 _cset(:shared_path)       { File.join(deploy_to, shared_dir) }
 _cset(:current_path)      { File.join(deploy_to, current_dir) }
 _cset(:release_path)      { File.join(releases_path, release_name) }
-
+_cset(:site_root)         { "" }
 _cset(:releases)          { capture("ls -xt #{releases_path}").split.reverse }
 _cset(:current_release)   { File.join(releases_path, releases.last) }
 _cset(:previous_release)  { File.join(releases_path, releases[-2]) }

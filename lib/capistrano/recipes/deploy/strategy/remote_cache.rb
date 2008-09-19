@@ -38,11 +38,12 @@ module Capistrano
 
           def copy_repository_cache
             logger.trace "copying the cached version to #{configuration[:release_path]}"
+            cached_site_root = File.join(repository_cache, site_root)
             if copy_exclude.empty? 
-              run "cp -RPp #{repository_cache} #{configuration[:release_path]} && #{mark}"
+              run "cp -RPp #{cached_site_root} #{configuration[:release_path]} && #{mark}"
             else
               exclusions = copy_exclude.map { |e| "--exclude=\"#{e}\"" }.join(' ')
-              run "rsync -rp #{exclusions} #{repository_cache}/* #{configuration[:release_path]} && #{mark}"
+              run "rsync -rp #{exclusions} #{cached_site_root}/* #{configuration[:release_path]} && #{mark}"
             end
           end
           
