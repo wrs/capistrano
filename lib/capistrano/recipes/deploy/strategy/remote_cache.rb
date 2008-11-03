@@ -43,7 +43,7 @@ module Capistrano
               run "cp -RPp #{cached_site_root} #{configuration[:release_path]} && #{mark}"
             else
               exclusions = copy_exclude.map { |e| "--exclude=\"#{e}\"" }.join(' ')
-              run "rsync -rp #{exclusions} #{cached_site_root}/* #{configuration[:release_path]} && #{mark}"
+              run "rsync -lrp #{exclusions} #{cached_site_root}/* #{configuration[:release_path]} && #{mark}"
             end
           end
           
