@@ -1,4 +1,30 @@
-== (unreleased)
+== 2.5.3 / December 6, 2008
+
+* Make previous_release return nil if there is no previous release [Mathias Meyer]
+
+* Play nice with rubies that don't inspect terminals well (ie. JRuby) by defaulting screen columns to 80 [Bob McWhirter]
+
+* Rollback of deploy:symlink would explode if there was no previous revision to rollback to [Jamis Buck]
+
+* Fix bug in transfer.rb that caused get/put/upload/download to ignore blocks passed to them [arika]
+
+* Fix issue with git SCM that caused "Unable to resolve revision" errors when there was trailing whitespace in git's output [Mark Zuneska, Daniel Berlinger and Evan Closson]
+
+
+== 2.5.2 / November 13, 2008
+
+* Fix issue with git SCM that caused "Unable to resolve revision for 'HEAD'" errors on deploy [Jamis Buck]
+
+
+== 2.5.1 / November 7, 2008
+
+* Add -t (--tools) switch for better task lists for external tools [Jamis Buck]
+
+* Make the RemoteDependency#try method use invoke_command instead of run, for sudo-ability [Matthias Marschall]
+
+* Make locally executed commands in Windows more Windows-friendly [esad@esse.at]
+
+* Added :scm_arguments variable for custom SCM arguments (subversion-only, currently) [David Abdemoulaie]
 
 * Don't emit -p for sudo when :sudo_prompt is blank [Matthias Marschall]
 
@@ -6,7 +32,7 @@
 
 * Make sure git query-revision matches on exact branch name [grant@nightriot.com]
 
-* Use -T <arg> to filter listed tasks by namespace [Mathias Meyer]
+* Use -T <arg> to filter listed tasks by a pattern [Mathias Meyer, Geoffrey Grosenbach]
 
 * Expose the #scm method on SCM::Base for building custom scm commands [Mathias Meyer]
 

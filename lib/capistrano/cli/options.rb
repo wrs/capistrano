@@ -79,8 +79,8 @@ module Capistrano
             options[:vars][name.to_sym] = value
           end
 
-          opts.on("-T", "--tasks [NAMESPACE]",
-            "List all tasks in the loaded recipe files."
+          opts.on("-T", "--tasks [PATTERN]",
+            "List all tasks (matching optional PATTERN) in the loaded recipe files."
           ) do |value|
             options[:tasks] = if value
               value
@@ -89,6 +89,10 @@ module Capistrano
             end
             options[:verbose] ||= 0
           end
+
+          opts.on("-t", "--tool",
+            "Abbreviates the output of -T for tool integration."
+          ) { options[:tool] = true }
 
           opts.on("-V", "--version",
             "Display the Capistrano version, and exit."
@@ -100,7 +104,10 @@ module Capistrano
 
           opts.on("-v", "--verbose",
             "Be more verbose. May be given more than once."
-          ) { options[:verbose] ||= 0; options[:verbose] += 1 }
+          ) do
+            options[:verbose] ||= 0
+            options[:verbose] += 1
+          end
 
           opts.on("-X", "--skip-system-config",
             "Don't load the system config file (capistrano.conf)"

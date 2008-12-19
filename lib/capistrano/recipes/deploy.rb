@@ -52,7 +52,7 @@ _cset(:release_path)      { File.join(releases_path, release_name) }
 _cset(:site_root)         { "" }
 _cset(:releases)          { capture("ls -xt #{releases_path}").split.reverse }
 _cset(:current_release)   { File.join(releases_path, releases.last) }
-_cset(:previous_release)  { File.join(releases_path, releases[-2]) }
+_cset(:previous_release)  { releases.length > 1 ? File.join(releases_path, releases[-2]) : nil }
 
 _cset(:current_revision)  { capture("cat #{current_path}/REVISION").chomp }
 _cset(:latest_revision)   { capture("cat #{current_release}/REVISION").chomp }
@@ -251,7 +251,14 @@ namespace :deploy do
     except `restart').
   DESC
   task :symlink, :except => { :no_release => true } do
-    on_rollback { run "rm -f #{current_path}; ln -s #{previous_release} #{current_path}; true" }
+    on_rollback do
+      if previous_release
+        run "rm -f #{current_path}; ln -s #{previous_release} #{current_path}; true"
+      else
+        logger.important "no previous release to rollback to, rollback of symlink skipped"
+      end
+    end
+
     run "rm -f #{current_path} && ln -s #{latest_release} #{current_path}"
   end
 
@@ -302,10 +309,10 @@ namespace :deploy do
       ever) need to be called directly.
     DESC
     task :revision, :except => { :no_release => true } do
-      if releases.length < 2
-        abort "could not rollback the code because there is no prior release"
-      else
+      if previous_release
         run "rm #{current_path}; ln -s #{previous_release} #{current_path}"
+      else
+        abort "could not rollback the code because there is no prior release"
       end
     end
 
